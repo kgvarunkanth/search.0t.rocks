@@ -944,19 +944,10 @@ app.post('/export', async (req, res) => {
             return res.status(400).send('Invalid wallet ID')
         }
 
-        // Get credits for the wallet
-        const credits = await getWalletBalance(body.walletId)
-
-        const cost = (body.exportCount - 100) / 10
-
-        if (cost > credits) {
-            return res.status(400).send('Insufficient credits')
-        }
-
         // if cost < 0
-        if (cost < 0) {
-            return res.status(400).send('Invalid export count')
-        }
+//        if (cost < 0) {
+  //          return res.status(400).send('Invalid export count')
+    //    }
 
 
         let requestedQuery: Record<string, any> = {}
@@ -988,7 +979,7 @@ app.post('/export', async (req, res) => {
         const payload = {
             "status": "started",
             "jobid": jobid,
-            "cost": cost,
+//            "cost": cost,
             "query": finalQuery,
             "additionalQuery": queryBuilt.additionalQuery,
             "doAdditionalQuery": queryBuilt.doAdditionalQuery,
@@ -1005,7 +996,7 @@ app.post('/export', async (req, res) => {
 
 
         // Deduct clients from wallet
-        await removeWalletBalance(body.walletId, cost)
+//        await removeWalletBalance(body.walletId, cost)
 
         // Post to wallet DB
         await axios.post(getRandServer().replace('BigData', 'Exports').replace('select', 'update'), {
@@ -1013,7 +1004,7 @@ app.post('/export', async (req, res) => {
                 "doc": {
                     // uuid v4
                     "id": payload.jobid,
-                    "cost": payload.cost,
+//                    "cost": payload.cost,
                     "wallet": payload.walletId,
                     "query": payload.query,
                     "status": payload.status,
@@ -1054,7 +1045,7 @@ app.post('/exports/callbacks/a-unique-id/exportCb', async (req, res) => {
 
     if (body.status === 'failed') {
         // Re-credit wallet
-        await addWalletBalance(body.walletId, body.cost)
+//        await addWalletBalance(body.walletId, body.cost)
     }
 
     // Post to db
@@ -1081,32 +1072,32 @@ app.post('/exports/callbacks/a-unique-id/exportCb', async (req, res) => {
 })
 
 
-app.get('/wallet/:walletId', async (req, res) => {
-    try {
-        const walletId = req.params.walletId
+//app.get('/wallet/:walletId', async (req, res) => {
+  //  try {
+    //    const walletId = req.params.walletId
+//
+//
+  //      if (!uuidRegex.test(walletId)) {
+    //        console.log('bad wallet id regex')
+      //      return res.status(400).json({ "error": "bad wallet id" })
+        //}
 
+       // if (typeof walletId !== 'string') {
+        //    return res.status(400).json({ "error": "bad request" })
+       // }
 
-        if (!uuidRegex.test(walletId)) {
-            console.log('bad wallet id regex')
-            return res.status(400).json({ "error": "bad wallet id" })
-        }
+        //if (walletId.length !== 36) {
+         //   console.log('bad wallet id length')
+           // return res.status(400).json({ "error": "bad wallet id" })
+       // }
 
-        if (typeof walletId !== 'string') {
-            return res.status(400).json({ "error": "bad request" })
-        }
+       // let balance = await getWalletBalance(walletId)
 
-        if (walletId.length !== 36) {
-            console.log('bad wallet id length')
-            return res.status(400).json({ "error": "bad wallet id" })
-        }
-
-        let balance = await getWalletBalance(walletId)
-
-        return res.json({ "credits": balance })
-    } catch {
-        return res.status(400).json({ "error": "stooppp" })
-    }
-})
+       // return res.json({ "credits": balance })
+    //} catch {
+      //  return res.status(400).json({ "error": "stooppp" })
+   // }
+//})
 
 
 function isAutomated(req: any) {
