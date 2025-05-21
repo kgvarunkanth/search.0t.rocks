@@ -8,7 +8,7 @@ To get your search engine running quickly on a single Linux host:
  1. Install Docker with Docker Compose
  2. Run `docker compose build; docker compose up`
  3. Run `bash start.sh`
- 4. Visit `http://your-ip:3000`
+ 4. Visit `http://your-ip:22080`
 
 ### Converting Data
 This is the hard part and completely up to you. You need to convert data into a standard format before it can be imported. See `sample.json` for the example data.
